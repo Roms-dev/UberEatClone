@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12540558085",
+    "project_id": "ubereatclone-e823e",
+    "storage_bucket": "ubereatclone-e823e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12540558085:android:9f563a168f270a6246556c",
+        "android_client_info": {
+          "package_name": "com.anonymous.UberEatClone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdwrbeg291NqKeb6g_OoAeU_tB6N5MesM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
