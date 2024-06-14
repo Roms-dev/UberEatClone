@@ -20,6 +20,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "compileSdkVersion": 31,
+      "targetSdkVersion": 31,
+      "kotlinVersion": "1.7.10",
       "package": "com.anonymous.UberEatClone",
       "googleServicesFile" : "./google-services.json"
     },
