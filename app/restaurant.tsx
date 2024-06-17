@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { router, Link } from 'expo-router';
@@ -38,7 +38,6 @@ const Restaurant = () => {
 
 
 
-
     //Fonctionne pas ici
 
     const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -59,58 +58,72 @@ const Restaurant = () => {
         }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <SafeAreaView>
+            <ScrollView>
 
                 <View style={styles.restaurantImage}>
                 <NavBar />
                 </View>
                 
-                <View style={styles.container}>
-                    <Text style={styles.title}>NOM RESTAURANT</Text>
                     <FlatList
                         data={restaurants}
                         keyExtractor={(item) => item.key}
                         renderItem={({ item }) => (
                         <View style={styles.content}>
-                            <View style={styles.content}>
-                            <Text style={styles.content}>{item.name}</Text>
-                            <View style={styles.content}>
-                                <Text style={styles.content}>{item.stars}</Text>
+
+                            <View style={styles.informationContainer}>
+                                <Text style={styles.title}>{item.name}</Text>
+                                
+                                <Text style={styles.content}>{item.stars} ★ (+{item.number_of_notes}) • Frais de livraison : {item.frais_livraisons / 100}€</Text>
+                                
+                                <Text style={styles.content}>Distance: {item.distance / 100} KM</Text>
+
+                                <Text style={styles.content}>
+                                    <Icon name="location-outline" size={16} color="black" />
+                                    {item.adresse}blablabla
+                                </Text>
+                                
+                                <Text style={styles.content}>Appuyer pour consulter les horaires, les informations, etc.</Text>
                             </View>
+
+
+
+                            <View style={styles.foodContainer}>
+                                <View style={styles.row}>
+                                    <View style={styles.column1}>
+                                        <Text>nom + prix + note + nombre d'avis + ingrédients</Text>
+                                    </View>
+                                    <View style={styles.column2}>
+                                    <Text>(IMAGE)</Text>
+                                    </View>
+                                </View>
                             </View>
-                            <Text style={styles.content}>Frais de livraison: {item.frais_livraisons / 100}€</Text>
+                            
+
+
                         </View>
-                        )}
-                    />
-                </View>
-                
-
-
-
-
-
-
-
-                <View style={styles.content}>
-                    <Text>item.name)</Text>
-                    <Text>(NOTE + NOMBRE DE NOTES + FRAIS DE LIVRAISON + POSITION)</Text>
-                    <Text>(ADRESSE)</Text>
-                    <Text>(HORAIRES)</Text>
-                </View>
-
-                <View style={styles.content}>
-                    <Text>(NOURRITURE)</Text>
-                </View>
-
+                        )}/>
             </ScrollView>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
+    informationContainer: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightblue'
+    },
+    foodContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'pink',
+    },
+    photoContainer: {
+        backgroundColor: 'black',
+        borderRadius: 5,
     },
     navBar: {
         height: 100,
@@ -126,16 +139,37 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 2,
       },
     content: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        fontSize: 16,
     },
     restaurantImage: {
         height: 120,
         backgroundColor: 'gold', 
+    },
+    row: {
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
+    column1: {
+        flex: 2,
+        backgroundColor: 'pink',
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 5,
+        marginLeft: 5,
+    },
+    column2: {
+        flex: 1,
+        backgroundColor: 'purple',
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 5,
+        marginRight: 5,
     },
 });
 
