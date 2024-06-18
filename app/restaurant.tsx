@@ -38,8 +38,6 @@ const Restaurant = () => {
 
 
 
-    //Fonctionne pas ici
-
     const [restaurants, setRestaurants] = useState<any[]>([]);
     useEffect(() => {
         const unsubscribe = firebase.firestore()
