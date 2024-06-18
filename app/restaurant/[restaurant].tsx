@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { router, Link, useLocalSearchParams } from 'expo-router';
 import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import { Image } from 'expo-image';
 
 
 const NavBar = () => {
-    const [heartColor, setHeartColor] = useState('black');
-    const [pointsColor, setPointsColor] = useState('black');
+    const [heartColor, setHeartColor] = useState('white');
+    const [pointsColor, setPointsColor] = useState('white');
 
     const toggleHeartColor = () => {
-        setHeartColor(prevColor => (prevColor === 'black' ? 'green' : 'black'));
+        setHeartColor(prevColor => (prevColor === 'white' ? 'green' : 'white'));
     };
 
     const togglePointsColor = () => {
-        setPointsColor(prevColor => (prevColor === 'black' ? 'white' : 'black'));
+        setPointsColor(prevColor => (prevColor === 'white' ? 'black' : 'white'));
     };
     return (
         <View style={styles.navBar}>
             <View>
-                <Icon name="arrow-back" size={30} color='black' onPress={() => { router.back() }} />
+                <Icon style={styles.iconContainer} name="arrow-back" size={30} color='white' onPress={() => { router.back() }} />
             </View>
 
             <View>
@@ -28,17 +29,17 @@ const NavBar = () => {
 
             <View>
                 <TouchableOpacity onPress={toggleHeartColor}>
-                    <Icon name="heart" size={30} color={heartColor} />
+                    <Icon style={styles.iconContainer} name="heart" size={30} color={heartColor} />
                 </TouchableOpacity>
             </View>
 
             <View>
-                <Icon name="search" size={30} color="black" />
+                <Icon style={styles.iconContainer} name="search" size={30} color="white" />
             </View>
 
             <View>
                 <TouchableOpacity onPress={togglePointsColor}>
-                    <Icon name="ellipsis-horizontal" size={30} color={pointsColor} />
+                    <Icon style={styles.iconContainer} name="ellipsis-horizontal" size={30} color={pointsColor} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -49,9 +50,9 @@ const Restaurant = () => {
 
     const { restaurant: restaurantId } = useLocalSearchParams()
 
-    const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, frais_livraisons: string, distance: string, address: string }>();
+    const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img:string, frais_livraisons: string, distance: string, address: string }>();
 
-    const [plats, setPlats] = useState<{key:string, name: string, prix:string, ingredients:array }[]>([]);
+    const [plats, setPlats] = useState<{key:string, name: string, prix:string, url:string, ingredients:array }[]>([]);
 
     useEffect(() => {
         const unsubscribe = firebase.firestore()
@@ -90,8 +91,14 @@ const Restaurant = () => {
             <ScrollView>
 
                 <View style={styles.restaurantImage}>
-                    <NavBar />
+                    <Image
+                        style={styles.imageRestaurant}
+                        source={restaurant.img}
+                        contentFit="cover"
+                    />
+                    
                 </View>
+                <NavBar />
 
                 <View>
 
@@ -154,7 +161,11 @@ const Restaurant = () => {
                             </View>
 
                             <View style={styles.column2}>
-                                <Text>(IMAGE)</Text>
+                                <Image
+                                style={styles.image}
+                                source={item.url}
+                                contentFit="cover"
+                                />
                             </View>
                         </View>
                     </View>
@@ -181,19 +192,22 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: 'grey',
     },
-    photoContainer: {
-        backgroundColor: 'black',
-        borderRadius: 5,
-    },
     buttonContainer: {
         margin: 5,
     },
+    iconContainer : {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 25,
+        padding: 5,
+    },
     navBar: {
+        width: '100%',
         height: 100,
         backgroundColor: 'transparent',
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
+        position: 'absolute',
     },
     navBarText: {
         color: 'white',
@@ -230,8 +244,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     restaurantImage: {
-        height: 120,
+        height: 150,
         backgroundColor: 'gold',
+        position: 'relative',
     },
     buttonRow: {
         flexDirection: 'row',
@@ -288,11 +303,20 @@ const styles = StyleSheet.create({
     column2: {
         flex: 1,
         backgroundColor: 'red',
-        padding: 10,
         marginTop: 10,
         marginBottom: 5,
         marginRight: 15,
         borderRadius: 10,
+    },
+    image: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: '#0553',
+        borderRadius: 10,
+    },
+    imageRestaurant: {
+        flex: 1,
+        width: '100%',
     },
 });
 
