@@ -4,6 +4,7 @@ import { View, Text, FlatList, StyleSheet, TextInput, Image } from 'react-native
 import { firebase } from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
+import { Link } from 'expo-router';
 
 
 const HomeScreen = () => {
@@ -57,17 +58,19 @@ const HomeScreen = () => {
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <View>
-            <View style={styles.restaurantImage}>
-            <Image source={ item.img } />
+            <Link href="/restaurant">
+              <View style={styles.restaurantImage}>
+                <Image source={ item.img } />
               </View>
-            <View style={styles.restaurantHeader}>
-              <Text style={styles.restaurantName}>{item.name}</Text>
-              <View style={styles.restaurantStarsContainer}>
-                <Text style={styles.restaurantStars}>{item.stars}</Text>
+              <View style={styles.restaurantHeader}>
+                <Text style={styles.restaurantName}>{item.name}</Text>
+                <View style={styles.restaurantStarsContainer}>
+                  <Text style={styles.restaurantStars}>{item.stars}</Text>
+                </View>
               </View>
-            </View>
-            <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
-          </View>
+              <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
+            </Link>
+          </View>  
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
