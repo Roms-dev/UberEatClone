@@ -10,8 +10,6 @@ import { Link } from 'expo-router';
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
-  const [filteredRestaurants, setFilteredRestaurants] = useState<any[]>([]);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
@@ -28,19 +26,7 @@ const HomeScreen = () => {
       });
 
     return () => unsubscribe();
-  }, []);
-
-  const handleSearch = (text: string) => {
-    setSearch(text);
-    if (text) {
-      const filteredData = restaurants.filter((item) => 
-        item.name.toLowerCase().includes(text.toLowerCase())
-      );
-      setFilteredRestaurants(filteredData);
-    } else {
-      setFilteredRestaurants(restaurants);
-    }
-  };
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -50,11 +36,13 @@ const HomeScreen = () => {
           style={styles.searchBar}
           placeholder="Rechercher dans l'aide Uber Eats"
           value={search}
-          onChangeText={handleSearch}
+          onChangeText={setSearch}
         />
       </View>
       <FlatList
-        data={restaurants}
+        data={restaurants.filter((item) => 
+          item.name.toLowerCase().includes(search.toLowerCase())
+        )} 
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <View>
