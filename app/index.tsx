@@ -1,6 +1,6 @@
 // screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
@@ -31,7 +31,10 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Restaurants Disponibles</Text>
+     <View style={styles.navBar}>
+        <Text style={styles.navBarAddress}>22, allée alan turing</Text>
+        <Icon name="shopping-cart" size={24} color="#000" />
+      </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
@@ -59,10 +62,6 @@ const HomeScreen = () => {
                     />
                   </View>
 
-                  {/* <View style={styles.restaurantImage}>
-                <Image source={ item.img } />
-              </View> */}
-
                   <View style={styles.restaurantHeader}>
                     <Text style={styles.restaurantName}>{item.name}</Text>
                     <View style={styles.restaurantStarsContainer}>
@@ -77,20 +76,36 @@ const HomeScreen = () => {
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <View style={styles.navBarBottom}>
+        <TouchableOpacity style={styles.navBarItem}>
+          <Icon name="home" size={24} color="#000" />
+          <Text style={styles.navBarText}>Accueil</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navBarItem}>
+          <Icon name="user" size={24} color="#000" />
+          <Text style={styles.navBarText}>Compte</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  image: {
-    flex: 1,
-    width: '100%',
-    borderRadius: 10,
-  },
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#fff',
+  },
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  navBarAddress: {
+    fontSize: 18,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -99,7 +114,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 25,
     paddingHorizontal: 10,
-    marginBottom: 20,
+    margin: 20,
     backgroundColor: '#f8f8f8',
   },
   searchBar: {
@@ -113,24 +128,32 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    margin: 20,
+  },
+  link: {
+    marginHorizontal: 20,
   },
   restaurantContainer: {
-    marginBottom: 65,
+    width: '100%',
     padding: 15,
-    backgroundColor: '#f8f8f8',
+    // backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff000',
     borderRadius: 5,
   },
   restaurantImage: {
     height: 170,
     backgroundColor: '#ccc',
-    borderRadius: 25,
+    borderRadius: 10,
     marginBottom: 10,
+  },
+  restaurantContent: {
+    flex: 1,
   },
   restaurantHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 5,
   },
   restaurantName: {
     fontSize: 18,
@@ -147,12 +170,7 @@ const styles = StyleSheet.create({
   },
   restaurantStars: {
     fontSize: 14,
-    fontWeight: "bold",
-  },
-  restaurantAddress: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 5,
+    fontWeight: 'bold',
   },
   fraisLivraisons: {
     fontSize: 14,
@@ -161,6 +179,27 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 30,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    borderRadius: 10,
+  },
+  navBarBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  navBarItem: {
+    alignItems: 'center',
+  },
+  navBarText: {
+    fontSize: 12,
+    marginTop: 5,
   },
 });
 
