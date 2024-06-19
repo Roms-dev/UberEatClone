@@ -52,7 +52,7 @@ const Restaurant = () => {
 
     const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img:string, frais_livraisons: string, distance: string, address: string }>();
 
-    const [plats, setPlats] = useState<{key:string, name: string, prix:string, url:string/*, ingredients:array*/ }[]>([]);
+    const [plats, setPlats] = useState<{key:string, name:string, prix:number, url:string/*, ingredients:array*/ }[]>([]);
 
     useEffect(() => {
         const unsubscribe = firebase.firestore()
@@ -142,8 +142,32 @@ const Restaurant = () => {
                     </View>
                 </View>
 
+                {plats.map(( item ) => (
+                    <View style={styles.foodContainer}>
+                        <Text>test</Text>
+                        <View style={styles.row}>
 
-                <FlatList
+                            <View style={styles.column1}>
+
+                                <Text style={styles.littleTitle}>{item.name}</Text>
+
+                                <Text style={styles.price}>{item.prix / 100}€</Text>
+
+                                <Text>ingrédients</Text>
+
+                            </View>
+
+                            <View style={styles.column2}>
+                                <Image
+                                style={styles.image}
+                                source={item.url}
+                                contentFit="cover"
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    ))}
+                {/* <FlatList
                 data={plats}
                 keyExtractor={(item) => item.key}
                 renderItem={({ item }) => (
@@ -170,7 +194,7 @@ const Restaurant = () => {
                         </View>
                     </View>
                     )}
-                />
+                /> */}
 
 
                 </View>
