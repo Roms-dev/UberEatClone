@@ -144,6 +144,7 @@ const Restaurant = () => {
 
                 {plats.map(( item ) => (
                     <View style={styles.foodContainer}>
+                        <Text>test</Text>
                         <View style={styles.row}>
 
                             <View style={styles.column1}>
