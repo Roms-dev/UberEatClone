@@ -58,7 +58,7 @@ const HomeScreen = () => {
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <View>
-            <Link href="/restaurant">
+            <Link href={`/restaurant/${item.key}`}>
               <View style={styles.restaurantImage}>
                 <Image source={ item.img } />
               </View>
