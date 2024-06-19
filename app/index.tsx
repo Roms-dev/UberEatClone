@@ -1,10 +1,11 @@
 // screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
+import { Image } from 'expo-image';
 
 
 const HomeScreen = () => {
@@ -30,6 +31,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Restaurants Disponibles</Text>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
@@ -47,18 +49,31 @@ const HomeScreen = () => {
         renderItem={({ item }) => (
           <View>
             <Link href={`/restaurant/${item.key}`}>
-              <View style={styles.restaurantImage}>
+              <View style={styles.restaurantContainer}>
+                <View>
+                  <View style={styles.restaurantImage}>
+                    <Image
+                      style={styles.image}
+                      source={item.img}
+                      contentFit="cover"
+                    />
+                  </View>
+
+                  {/* <View style={styles.restaurantImage}>
                 <Image source={ item.img } />
-              </View>
-              <View style={styles.restaurantHeader}>
-                <Text style={styles.restaurantName}>{item.name}</Text>
-                <View style={styles.restaurantStarsContainer}>
-                  <Text style={styles.restaurantStars}>{item.stars}</Text>
+              </View> */}
+
+                  <View style={styles.restaurantHeader}>
+                    <Text style={styles.restaurantName}>{item.name}</Text>
+                    <View style={styles.restaurantStarsContainer}>
+                      <Text style={styles.restaurantStars}>{item.stars}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
                 </View>
               </View>
-              <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
             </Link>
-          </View>  
+          </View>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
@@ -67,6 +82,11 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    width: '100%',
+    borderRadius: 10,
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -103,7 +123,7 @@ const styles = StyleSheet.create({
   },
   restaurantImage: {
     height: 170,
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
     borderRadius: 25,
     marginBottom: 10,
   },
