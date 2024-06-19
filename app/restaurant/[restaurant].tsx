@@ -52,7 +52,13 @@ const Restaurant = () => {
 
     const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img:string, frais_livraisons: string, distance: string, address: string }>();
 
-    const [plats, setPlats] = useState<{key:string, name:string, prix:number, url:string/*, ingredients:array*/ }[]>([]);
+    const [plats, setPlats] = useState<{key:string, name:string, prix:number, url:string, ingredients:string[] }[]>([]);
+
+    // const [isModalVisible, setModalVisible] = useState(false);
+
+    // const toggleModal = () => {
+    //     setModalVisible(!isModalVisible);
+    // };
 
     useEffect(() => {
         const unsubscribe = firebase.firestore()
@@ -140,11 +146,13 @@ const Restaurant = () => {
                             </Text>
                         </View>
                     </View>
+                    <Text style={styles.subTitle}>Nos plats à emporter</Text>
                 </View>
 
                 {plats.map(( item ) => (
+                    
                     <View style={styles.foodContainer}>
-                        <Text>test</Text>
+                        
                         <View style={styles.row}>
 
                             <View style={styles.column1}>
@@ -153,7 +161,9 @@ const Restaurant = () => {
 
                                 <Text style={styles.price}>{item.prix / 100}€</Text>
 
-                                <Text>ingrédients</Text>
+                                {item.ingredients != null && (
+                                    <Text>{item.ingredients.join(', ')}</Text>
+                                )}
 
                             </View>
 
@@ -199,6 +209,23 @@ const Restaurant = () => {
 
                 </View>
             </ScrollView>
+
+            {/* <Modal
+                transparent={true}
+                visible={isModalVisible}
+                animationType="slide"
+                onRequestClose={toggleModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text>Menu Options</Text>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <Text>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal> */}
+
         </SafeAreaView>
     );
 };
@@ -238,9 +265,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     title: {
-        fontSize: 24,
+        fontSize: 30,
         fontWeight: 'bold',
         marginBottom: 2,
+    },
+    subTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginLeft: 10,
+        marginTop: 5,
     },
     CommandeGroupee: {
         fontSize: 12,
@@ -342,6 +375,18 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
     },
+    // modalContainer: {
+    //     flex: 1,
+    //     justifyContent: 'flex-end',
+    //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // },
+    // modalContent: {
+    //     backgroundColor: 'white',
+    //     padding: 20,
+    //     borderTopLeftRadius: 20,
+    //     borderTopRightRadius: 20,
+    //     minHeight: '50%',
+    // },
 });
 
 export default Restaurant 

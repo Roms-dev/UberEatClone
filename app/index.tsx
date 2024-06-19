@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 65,
     padding: 15,
     backgroundColor: '#f8f8f8',
-    borderRadius: 5,
+    borderRadius: 25,
   },
   restaurantImage: {
     height: 170,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   restaurantName: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     flex: 1,
   },
