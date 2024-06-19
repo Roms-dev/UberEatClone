@@ -52,7 +52,7 @@ const Restaurant = () => {
 
     const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img:string, frais_livraisons: string, distance: string, address: string }>();
 
-    const [plats, setPlats] = useState<{key:string, name: string, prix:string, url:string, ingredients:array }[]>([]);
+    const [plats, setPlats] = useState<{key:string, name: string, prix:string, url:string/*, ingredients:array*/ }[]>([]);
 
     useEffect(() => {
         const unsubscribe = firebase.firestore()
