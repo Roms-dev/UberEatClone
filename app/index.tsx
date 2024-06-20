@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
@@ -50,7 +50,8 @@ const HomeScreen = () => {
         )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <Link style={styles.restaurantContainer} href={`/restaurant/${item.key}`}>
+          <Link asChild style={styles.restaurantContainer} href={`/restaurant/${item.key}`}>
+            <Pressable>
             <View style={styles.restaurantWrapper}>
               <Image
                 style={styles.image}
@@ -67,6 +68,8 @@ const HomeScreen = () => {
                 Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min
               </Text>
             </View>
+            </Pressable>
+            
           </Link>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -76,10 +79,11 @@ const HomeScreen = () => {
           <Icon name="home" size={24} color="#000" />
           <Text style={styles.navBarText}>Accueil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navBarItem}>
+       
+        <Link href="/login" style={styles.navBarItem}>
           <Icon name="user" size={24} color="#000" />
           <Text style={styles.navBarText}>Compte</Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   );
@@ -127,7 +131,7 @@ const styles = StyleSheet.create({
   restaurantContainer: {
     width: '100%',
     padding: 15,
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     borderRadius: 5,
   },
   restaurantHeader: {
