@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { router, Link, useLocalSearchParams } from 'expo-router';
@@ -48,11 +48,19 @@ const NavBar = () => {
 
 const Restaurant = () => {
 
+    const truncateIngredients = (ingredients, maxLength) => {
+        const allIngredients = ingredients.join(', ');
+        if (allIngredients.length <= maxLength) {
+            return allIngredients;
+        }
+        return allIngredients.substring(0, maxLength) + '...';
+    };
+
     const { restaurant: restaurantId } = useLocalSearchParams()
 
-    const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img:string, frais_livraisons: string, distance: string, address: string }>();
+    const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img: string, frais_livraisons: string, distance: string, address: string }>();
 
-    const [plats, setPlats] = useState<{key:string, name:string, prix:number, url:string, ingredients:string[] }[]>([]);
+    const [plats, setPlats] = useState<{ key: string, name: string, prix: number, url: string, ingredients: string[] }[]>([]);
 
     // const [isModalVisible, setModalVisible] = useState(false);
 
@@ -79,12 +87,12 @@ const Restaurant = () => {
             .onSnapshot(querysnapshot => {
 
                 const plats: any[] = [];
-                    querysnapshot.forEach((documentSnapshot) => {
-                        plats.push({
-                   ...documentSnapshot.data(),
-                  key: documentSnapshot.id,
-                  });
-             });
+                querysnapshot.forEach((documentSnapshot) => {
+                    plats.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    });
+                });
                 setPlats(plats);
             });
         return () => unsubscribe();
@@ -102,7 +110,7 @@ const Restaurant = () => {
                         source={restaurant.img}
                         contentFit="cover"
                     />
-                    
+
                 </View>
                 <NavBar />
 
@@ -124,60 +132,63 @@ const Restaurant = () => {
                     </View>
 
 
-                <View style={styles.buttonContainer}>
-                    <View style={styles.buttonRow}>
-                        <View style={styles.buttonColumn1}>
-                            <View style={styles.buttonRow}>
-                                <View style={styles.buttonColumn1bis}>
-                                    <Text style={styles.Livraison}>
-                                        Livraison
-                                    </Text>
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.buttonRow}>
+                            <View style={styles.buttonColumn1}>
+                                <View style={styles.buttonRow}>
+                                    <View style={styles.buttonColumn1bis}>
+                                        <Text style={styles.Livraison}>
+                                            Livraison
+                                        </Text>
+                                    </View>
+                                    <View style={styles.buttonColumn2bis}>
+                                        <Text style={styles.AEmporter}>
+                                            A Emporter
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View style={styles.buttonColumn2bis}>
-                                    <Text  style={styles.AEmporter}>
-                                    A Emporter
-                                    </Text>
+                            </View>
+                            <View style={styles.buttonColumn2}>
+                                <Text style={styles.CommandeGroupee}>
+                                    <Icon name="person-add" size={16} color="black" /> Commande groupée
+                                </Text>
+                            </View>
+                        </View>
+                        <Text style={styles.subTitle}>Nos plats à emporter</Text>
+                    </View>
+
+                    {plats.map((item) => (
+                        <Link href={`/restaurant/${restaurantId}/${item.key}`} asChild style={styles.foodContainer}>
+                            <Pressable>
+
+                            <View style={styles.row}>
+
+                                <View style={styles.column1}>
+
+                                    <Text style={styles.littleTitle}>{item.name}</Text>
+
+                                    <Text style={styles.price}>{item.prix ? (item.prix / 100).toFixed(2) : ''}€</Text>
+
+                                    {item.ingredients != null && (
+                                        <Text>{truncateIngredients(item.ingredients, 60)}</Text> // Ajustez la longueur maximale ici
+
+                                    )}
+
+                                </View>
+
+                                <View style={styles.column2}>
+                                    <Image
+                                        style={styles.image}
+                                        source={item.url}
+                                        contentFit="cover"
+                                    />
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.buttonColumn2}>
-                            <Text  style={styles.CommandeGroupee}>
-                                <Icon name="person-add" size={16} color="black" /> Commande groupée
-                            </Text>
-                        </View>
-                    </View>
-                    <Text style={styles.subTitle}>Nos plats à emporter</Text>
-                </View>
 
-                {plats.map(( item ) => (
-                    
-                    <View style={styles.foodContainer}>
-                        
-                        <View style={styles.row}>
-
-                            <View style={styles.column1}>
-
-                                <Text style={styles.littleTitle}>{item.name}</Text>
-
-                                <Text style={styles.price}>{item.prix / 100}€</Text>
-
-                                {item.ingredients != null && (
-                                    <Text>{item.ingredients.join(', ')}</Text>
-                                )}
-
-                            </View>
-
-                            <View style={styles.column2}>
-                                <Image
-                                style={styles.image}
-                                source={item.url}
-                                contentFit="cover"
-                                />
-                            </View>
-                        </View>
-                    </View>
+                            </Pressable>
+                        </Link>
                     ))}
-                {/* <FlatList
+                    {/* <FlatList
                 data={plats}
                 keyExtractor={(item) => item.key}
                 renderItem={({ item }) => (
@@ -246,7 +257,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         margin: 5,
     },
-    iconContainer : {
+    iconContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         borderRadius: 25,
         padding: 5,
@@ -259,10 +270,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         position: 'absolute',
-    },
-    navBarText: {
-        color: 'white',
-        fontSize: 18,
     },
     title: {
         fontSize: 30,
@@ -281,7 +288,7 @@ const styles = StyleSheet.create({
     Livraison: {
         fontSize: 12,
     },
-    AEmporter : {
+    AEmporter: {
         fontSize: 12,
         color: 'grey',
     },
@@ -356,6 +363,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
         marginLeft: 5,
+        maxWidth: '75%',
     },
     column2: {
         flex: 1,
