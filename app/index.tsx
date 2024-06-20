@@ -1,4 +1,3 @@
-// screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
@@ -6,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
-
 
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -31,9 +29,11 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-     <View style={styles.navBar}>
+      <View style={styles.navBar}>
         <Text style={styles.navBarAddress}>22, allée alan turing</Text>
-        <Icon name="shopping-cart" size={24} color="#000" />
+        <TouchableOpacity>
+          <Icon name="shopping-cart" size={24} color="#000" />
+        </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
@@ -47,32 +47,27 @@ const HomeScreen = () => {
       <FlatList
         data={restaurants.filter((item) => 
           item.name.toLowerCase().includes(search.toLowerCase())
-        )} 
+        )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <View>
-            <Link href={`/restaurant/${item.key}`}>
-              <View style={styles.restaurantContainer}>
-                <View>
-                  <View style={styles.restaurantImage}>
-                    <Image
-                      style={styles.image}
-                      source={item.img}
-                      contentFit="cover"
-                    />
-                  </View>
-
-                  <View style={styles.restaurantHeader}>
-                    <Text style={styles.restaurantName}>{item.name}</Text>
-                    <View style={styles.restaurantStarsContainer}>
-                      <Text style={styles.restaurantStars}>{item.stars}</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
+          <Link style={styles.restaurantContainer} href={`/restaurant/${item.key}`}>
+            <View style={styles.restaurantWrapper}>
+              <Image
+                style={styles.image}
+                source={item.img}
+                contentFit="cover"
+              />
+              <View style={styles.restaurantHeader}>
+                <Text style={styles.restaurantName}>{item.name}</Text>
+                <View style={styles.restaurantStarsContainer}>
+                  <Text style={styles.restaurantStars}>{item.stars}</Text>
                 </View>
               </View>
-            </Link>
-          </View>
+              <Text style={styles.fraisLivraisons}>
+                Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min
+              </Text>
+            </View>
+          </Link>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
@@ -93,6 +88,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: '#fff',
   },
   navBar: {
@@ -115,7 +111,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 10,
     margin: 20,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f',
   },
   searchBar: {
     fontSize: 18,
@@ -125,29 +121,14 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginRight: 10,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  link: {
-    marginHorizontal: 20,
+  restaurantWrapper: {
+    flex: 1,
   },
   restaurantContainer: {
     width: '100%',
     padding: 15,
-    // backgroundColor: '#f8f8f8',
-    backgroundColor: '#fff000',
-    borderRadius: 5,
-  },
-  restaurantImage: {
-    height: 170,
     backgroundColor: '#ccc',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  restaurantContent: {
-    flex: 1,
+    borderRadius: 5,
   },
   restaurantHeader: {
     flexDirection: 'row',
@@ -181,9 +162,10 @@ const styles = StyleSheet.create({
     height: 30,
   },
   image: {
-    flex: 1,
     width: '100%',
+    height: 170,
     borderRadius: 10,
+    marginBottom: 10,
   },
   navBarBottom: {
     flexDirection: 'row',
