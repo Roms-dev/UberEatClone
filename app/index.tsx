@@ -1,18 +1,14 @@
-// screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 
-
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
-  const [filteredRestaurants, setFilteredRestaurants] = useState<any[]>([]);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
@@ -29,80 +25,83 @@ const HomeScreen = () => {
       });
 
     return () => unsubscribe();
-  }, []);
-
-  const handleSearch = (text: string) => {
-    setSearch(text);
-    if (text) {
-      const filteredData = restaurants.filter((item) =>
-        item.name.toLowerCase().includes(text.toLowerCase())
-      );
-      setFilteredRestaurants(filteredData);
-    } else {
-      setFilteredRestaurants(restaurants);
-    }
-  };
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Restaurants Disponibles</Text>
+      <View style={styles.navBar}>
+        <Text style={styles.navBarAddress}>22, allée alan turing</Text>
+        <TouchableOpacity>
+          <Icon name="shopping-cart" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
           style={styles.searchBar}
           placeholder="Rechercher dans l'aide Uber Eats"
           value={search}
-          onChangeText={handleSearch}
+          onChangeText={setSearch}
         />
       </View>
       <FlatList
-        data={restaurants}
+        data={restaurants.filter((item) => 
+          item.name.toLowerCase().includes(search.toLowerCase())
+        )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <View>
-            <Link href={`/restaurant/${item.key}`}>
-              <View style={styles.restaurantContainer}>
-                <View>
-                  <View style={styles.restaurantImage}>
-                    <Image
-                      style={styles.image}
-                      source={item.img}
-                      contentFit="cover"
-                    />
-                  </View>
-
-                  {/* <View style={styles.restaurantImage}>
-                <Image source={ item.img } />
-              </View> */}
-
-                  <View style={styles.restaurantHeader}>
-                    <Text style={styles.restaurantName}>{item.name}</Text>
-                    <View style={styles.restaurantStarsContainer}>
-                      <Text style={styles.restaurantStars}>{item.stars}</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.fraisLivraisons}>Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min</Text>
+          <Link style={styles.restaurantContainer} href={`/restaurant/${item.key}`}>
+            <View style={styles.restaurantWrapper}>
+              <Image
+                style={styles.image}
+                source={item.img}
+                contentFit="cover"
+              />
+              <View style={styles.restaurantHeader}>
+                <Text style={styles.restaurantName}>{item.name}</Text>
+                <View style={styles.restaurantStarsContainer}>
+                  <Text style={styles.restaurantStars}>{item.stars}</Text>
                 </View>
               </View>
-            </Link>
-          </View>
+              <Text style={styles.fraisLivraisons}>
+                Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min
+              </Text>
+            </View>
+          </Link>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <View style={styles.navBarBottom}>
+        <TouchableOpacity style={styles.navBarItem}>
+          <Icon name="home" size={24} color="#000" />
+          <Text style={styles.navBarText}>Accueil</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navBarItem}>
+          <Icon name="user" size={24} color="#000" />
+          <Text style={styles.navBarText}>Compte</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  image: {
-    flex: 1,
-    width: '100%',
-    borderRadius: 10,
-  },
   container: {
     flex: 1,
-    padding: 20,
+    flexDirection: 'column',
     backgroundColor: '#fff',
+  },
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  navBarAddress: {
+    fontSize: 18,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -111,8 +110,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 25,
     paddingHorizontal: 10,
-    marginBottom: 20,
-    backgroundColor: '#f8f8f8',
+    margin: 20,
+    backgroundColor: '#f',
   },
   searchBar: {
     fontSize: 18,
@@ -122,13 +121,11 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginRight: 10,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  restaurantWrapper: {
+    flex: 1,
   },
   restaurantContainer: {
-    marginBottom: 65,
+    width: '100%',
     padding: 15,
     backgroundColor: '#f8f8f8',
     borderRadius: 25,
@@ -136,13 +133,13 @@ const styles = StyleSheet.create({
   restaurantImage: {
     height: 170,
     backgroundColor: '#ccc',
-    borderRadius: 25,
-    marginBottom: 10,
+    borderRadius: 5,
   },
   restaurantHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 5,
   },
   restaurantName: {
     fontSize: 24,
@@ -159,12 +156,7 @@ const styles = StyleSheet.create({
   },
   restaurantStars: {
     fontSize: 14,
-    fontWeight: "bold",
-  },
-  restaurantAddress: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 5,
+    fontWeight: 'bold',
   },
   fraisLivraisons: {
     fontSize: 14,
@@ -173,6 +165,28 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 30,
+  },
+  image: {
+    width: '100%',
+    height: 170,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  navBarBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  navBarItem: {
+    alignItems: 'center',
+  },
+  navBarText: {
+    fontSize: 12,
+    marginTop: 5,
   },
 });
 
