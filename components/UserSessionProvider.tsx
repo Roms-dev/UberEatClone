@@ -46,7 +46,7 @@ const UserSessionProvider: React.FC = (props) => {
     if (user) {
       try {
         await user.updateEmail(newEmail);
-        setEmail(newEmail); // Update email in context after successful update
+        setEmail(newEmail);
       } catch (error) {
         throw error;
       }

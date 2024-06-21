@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
-import { Link, useRouter } from 'expo-router'; // Assuming useRouter is correctly imported from expo-router
+import { Link, useRouter } from 'expo-router';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
@@ -11,7 +11,7 @@ const HomeScreen = () => {
   const [search, setSearch] = useState('');
   const [address, setAddress] = useState('');
   const { isAuthenticated } = useUserSession();
-  const router = useRouter(); // Assuming useRouter is correctly set up
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
