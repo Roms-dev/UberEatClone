@@ -5,10 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
+import useUserSession from '@/hooks/useUserSession';
+
 
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
+  const [address, setAddress] = useState('');
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
@@ -30,10 +33,15 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        <Text style={styles.navBarAddress}>22, allée alan turing</Text>
-        <TouchableOpacity>
-          <Icon name="shopping-cart" size={24} color="#000" />
-        </TouchableOpacity>
+      <TextInput
+        style={styles.navBarAddress}
+        placeholder="Saisissez votre adresse"
+        value={address}
+        onChangeText={address => setAddress(address)}
+      />        
+      <TouchableOpacity>
+        <Icon name="shopping-cart" size={24} color="#000" />
+      </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />

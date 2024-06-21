@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Image } from 'expo-image';
-
+import useUserSession from '@/hooks/useUserSession';
 
 const CreateAccount = () => {
   const [firstName, setFirstName] = useState('');
@@ -11,7 +11,7 @@ const CreateAccount = () => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
-
+  const {setUserId} = useUserSession();
   const handleSignUp = () => {
     if (!firstName || !lastName || !address || !password) {
       Alert.alert('Missing Fields', 'Please fill in all fields');
@@ -20,9 +20,10 @@ const CreateAccount = () => {
 
     auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then((credential) => {
         console.log('User account created & signed in!');
-        // Optionally, you can update user profile information here
+        setUserId(credential.user.uid)
+        router.push('/');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -80,7 +81,7 @@ const CreateAccount = () => {
       </TouchableOpacity>
       <Link href="/login">
             <Text style={styles.signinText}>Déjà un compte? Connectez-vous</Text>
-        </Link>
+      </Link>
     </View>
   );
 };
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff',
   },
   image: {
     width: 150,  
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: '#bbb',
     borderRadius: 5,
