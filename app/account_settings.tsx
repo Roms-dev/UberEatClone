@@ -1,27 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, Button, TextInput, Alert, StyleSheet } from 'react-native';
 import { UserContext } from '@/components/UserSessionProvider';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const AccountSettingsScreen = () => {
-  const { email, changeEmail, changePassword, logout } = useContext(UserContext);
-  const [newEmail, setNewEmail] = useState('');
+  const { changePassword, logout } = useContext(UserContext);
   const [newPassword, setNewPassword] = useState('');
-
-  const handleChangeEmail = () => {
-    if (newEmail) {
-      changeEmail(newEmail)
-        .then(() => {
-          Alert.alert('Email changé avec succès');
-          setNewEmail('');
-        })
-        .catch(error => {
-          Alert.alert('Erreur', error.message);
-        });
-    } else {
-      Alert.alert('Veuillez entrer un nouvel email');
-    }
-  };
+  const router = useRouter();
 
   const handleChangePassword = () => {
     if (newPassword) {
@@ -41,18 +26,11 @@ const AccountSettingsScreen = () => {
   const handleLogout = () => {
     logout();
     router.push('/');
-};
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Bienvenue, {email}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nouveau Email"
-        value={newEmail}
-        onChangeText={setNewEmail}
-      />
-      <Button title="Changer d'Email" onPress={handleChangeEmail} />
+      <Text style={styles.title}>Paramètres</Text>
       <TextInput
         style={styles.input}
         placeholder="Nouveau Mot de Passe"
@@ -60,8 +38,10 @@ const AccountSettingsScreen = () => {
         value={newPassword}
         onChangeText={setNewPassword}
       />
-      <Button title="Changer de Mot de Passe" onPress={handleChangePassword} />
-      <Button title="Se Déconnecter" onPress={handleLogout} />
+      <Button title="Changer de Mot de Passe" onPress={handleChangePassword} color="#162328" />
+      <View style={styles.logoutButton}>
+        <Button title="Se Déconnecter" onPress={handleLogout} color="#bf2f38" />
+      </View>
     </View>
   );
 };
@@ -73,9 +53,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  text: {
-    fontSize: 18,
+  title: {
+    fontSize: 24,
     marginBottom: 20,
+    color: '#149234',
+    fontWeight: 'bold',
   },
   input: {
     width: '100%',
@@ -84,6 +66,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bbb',
     borderRadius: 5,
+  },
+  logoutButton: {
+    marginTop: 20,
+    width: '100%',
   },
 });
 

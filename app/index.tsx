@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import { Link, useRouter } from 'expo-router'; // Assuming useRouter is correctly imported from expo-router
 import Icon from '@expo/vector-icons/FontAwesome';
-import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
-
 
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [address, setAddress] = useState('');
   const { isAuthenticated } = useUserSession();
+  const router = useRouter(); // Assuming useRouter is correctly set up
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
       .collection('Restaurant')
-      .onSnapshot(querysnapshot => {
+      .onSnapshot(querySnapshot => {
         const restaurants: any[] = [];
-        querysnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
           restaurants.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -34,16 +33,15 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-      <TextInput
-        style={styles.navBarAddress}
-        placeholder="Saisissez votre adresse"
-        value={address}
-        onChangeText={address => setAddress(address)}
-      />        
-      <TouchableOpacity>
-        <Icon name="shopping-cart" size={24} color="#000" />
-      </TouchableOpacity>
-
+        <TextInput
+          style={styles.navBarAddress}
+          placeholder="Saisissez votre adresse"
+          value={address}
+          onChangeText={address => setAddress(address)}
+        />        
+        <TouchableOpacity onPress={() => router.push('/shopping_cart')}>
+          <Icon name="shopping-cart" size={24} color="#000" />
+        </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
@@ -60,40 +58,38 @@ const HomeScreen = () => {
         )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <Link asChild style={styles.restaurantContainer} href={`/restaurant/${item.key}`}>
+          <TouchableOpacity style={styles.restaurantContainer} onPress={() => router.push(`/restaurant/${item.key}`)}>
             <Pressable>
-            <View style={styles.restaurantWrapper}>
-              <Image
-                style={styles.image}
-                source={item.img}
-                contentFit="cover"
-              />
-              <View style={styles.restaurantHeader}>
-                <Text style={styles.restaurantName}>{item.name}</Text>
-                <View style={styles.restaurantStarsContainer}>
-                  <Text style={styles.restaurantStars}>{item.stars}</Text>
+              <View style={styles.restaurantWrapper}>
+                <Image
+                  style={styles.image}
+                  source={item.img}
+                  contentFit="cover"
+                />
+                <View style={styles.restaurantHeader}>
+                  <Text style={styles.restaurantName}>{item.name}</Text>
+                  <View style={styles.restaurantStarsContainer}>
+                    <Text style={styles.restaurantStars}>{item.stars}</Text>
+                  </View>
                 </View>
+                <Text style={styles.fraisLivraisons}>
+                  Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min
+                </Text>
               </View>
-              <Text style={styles.fraisLivraisons}>
-                Frais de livraison : {item.frais_livraisons / 100}€ • {item.temp_livraison} min
-              </Text>
-            </View>
             </Pressable>
-            
-          </Link>
+          </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
       <View style={styles.navBarBottom}>
-        <TouchableOpacity style={styles.navBarItem}>
+        <TouchableOpacity style={styles.navBarItem} onPress={() => router.push('/')}>
           <Icon name="home" size={24} color="#000" />
           <Text style={styles.navBarText}>Accueil</Text>
         </TouchableOpacity>
-       
-        <Link href={isAuthenticated ? '/account_settings' : '/login'} style={styles.navBarItem}>
+        <TouchableOpacity style={styles.navBarItem} onPress={() => router.push(isAuthenticated ? '/account_settings' : '/login')}>
           <Icon name="user" size={24} color="#000" />
           <Text style={styles.navBarText}>{isAuthenticated ? 'Paramètres' : 'Compte'}</Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -143,11 +139,6 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
     borderRadius: 25,
-  },
-  restaurantImage: {
-    height: 170,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
   },
   restaurantHeader: {
     flexDirection: 'row',
