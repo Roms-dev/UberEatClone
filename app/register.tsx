@@ -22,7 +22,6 @@ const CreateAccount = () => {
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         console.log('User account created & signed in!');
-        // Optionally, you can update user profile information here
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {

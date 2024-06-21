@@ -30,7 +30,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        <Text style={styles.navBarAddress}>22, allée alan turing</Text>
+        <Text style={styles.navBarAddress}>22, allée Alan Turing</Text>
         <TouchableOpacity>
           <Icon name="shopping-cart" size={24} color="#000" />
         </TouchableOpacity>

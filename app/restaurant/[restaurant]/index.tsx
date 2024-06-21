@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { router, Link, useLocalSearchParams } from 'expo-router';
-import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import { Image } from 'expo-image';
+// import PlatContainer from '@/components/PlatContainer';
+import ImageContainer from '@/components/ImageContainer';
 
 
-const NavBar = () => {
+const FullNavBar = () => {
     const [heartColor, setHeartColor] = useState('white');
     const [pointsColor, setPointsColor] = useState('white');
 
@@ -19,7 +20,7 @@ const NavBar = () => {
         setPointsColor(prevColor => (prevColor === 'white' ? 'black' : 'white'));
     };
     return (
-        <View style={styles.navBar}>
+        <View style={styles.FullNavBar}>
             <View>
                 <Icon style={styles.iconContainer} name="arrow-back" size={30} color='white' onPress={() => { router.back() }} />
             </View>
@@ -57,10 +58,9 @@ const Restaurant = () => {
     };
 
     const { restaurant: restaurantId } = useLocalSearchParams()
-
     const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img: string, frais_livraisons: string, distance: string, address: string }>();
-
     const [plats, setPlats] = useState<{ key: string, name: string, prix: number, url: string, ingredients: string[] }[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // const [isModalVisible, setModalVisible] = useState(false);
 
@@ -85,7 +85,6 @@ const Restaurant = () => {
             .doc(restaurantId as string)
             .collection('Plats')
             .onSnapshot(querysnapshot => {
-
                 const plats: any[] = [];
                 querysnapshot.forEach((documentSnapshot) => {
                     plats.push({
@@ -94,25 +93,26 @@ const Restaurant = () => {
                     });
                 });
                 setPlats(plats);
+                setLoading(false);
             });
         return () => unsubscribe();
-    }, []);
+    }, [restaurantId]);
 
     if (restaurant == null) return null
-
+    
     return (
         <SafeAreaView>
             <ScrollView>
-
-                <View style={styles.restaurantImage}>
+            <ImageContainer imageUrl = {restaurant.img} />
+                {/* <View style={styles.restaurantImage}>
                     <Image
                         style={styles.imageRestaurant}
                         source={restaurant.img}
                         contentFit="cover"
-                    />
+                    /> 
 
-                </View>
-                <NavBar />
+                </View> */}
+                <FullNavBar />
 
                 <View>
 
@@ -157,6 +157,7 @@ const Restaurant = () => {
                         <Text style={styles.subTitle}>Nos plats à emporter</Text>
                     </View>
 
+                    {/* <PlatContainer /> */}
                     {plats.map((item) => (
                         <Link href={`/restaurant/${restaurantId}/${item.key}`} asChild style={styles.foodContainer}>
                             <Pressable>
@@ -170,7 +171,7 @@ const Restaurant = () => {
                                     <Text style={styles.price}>{item.prix ? (item.prix / 100).toFixed(2) : ''}€</Text>
 
                                     {item.ingredients != null && (
-                                        <Text>{truncateIngredients(item.ingredients, 60)}</Text> // Ajustez la longueur maximale ici
+                                        <Text>{truncateIngredients(item.ingredients, 60)}</Text>
 
                                     )}
 
@@ -188,6 +189,8 @@ const Restaurant = () => {
                             </Pressable>
                         </Link>
                     ))}
+
+
                     {/* <FlatList
                 data={plats}
                 keyExtractor={(item) => item.key}
@@ -262,7 +265,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: 5,
     },
-    navBar: {
+    FullNavBar: {
         width: '100%',
         height: 100,
         backgroundColor: 'transparent',
@@ -307,11 +310,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 16,
     },
-    restaurantImage: {
-        height: 150,
-        backgroundColor: 'gold',
-        position: 'relative',
-    },
+    // restaurantImage: {
+    //     height: 150,
+    //     backgroundColor: 'gold',
+    //     position: 'relative',
+    // },
     buttonRow: {
         flexDirection: 'row',
     },
@@ -379,10 +382,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#0553',
         borderRadius: 10,
     },
-    imageRestaurant: {
-        flex: 1,
-        width: '100%',
-    },
+    // imageRestaurant: {
+    //     flex: 1,
+    //     width: '100%',
+    // },
     // modalContainer: {
     //     flex: 1,
     //     justifyContent: 'flex-end',
