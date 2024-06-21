@@ -12,6 +12,7 @@ const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [address, setAddress] = useState('');
+  const { isAuthenticated } = useUserSession();
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
@@ -89,9 +90,9 @@ const HomeScreen = () => {
           <Text style={styles.navBarText}>Accueil</Text>
         </TouchableOpacity>
        
-        <Link href="/login" style={styles.navBarItem}>
+        <Link href={isAuthenticated ? '/account_settings' : '/login'} style={styles.navBarItem}>
           <Icon name="user" size={24} color="#000" />
-          <Text style={styles.navBarText}>Compte</Text>
+          <Text style={styles.navBarText}>{isAuthenticated ? 'Paramètres' : 'Compte'}</Text>
         </Link>
       </View>
     </View>
