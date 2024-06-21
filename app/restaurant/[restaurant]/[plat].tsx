@@ -5,13 +5,28 @@ import { router, useLocalSearchParams } from 'expo-router';
 // import { Image } from 'expo-image';
 import NavBar from '@/components/NavBar';
 import ImageContainer from '@/components/ImageContainer';
+import useUserSession from '@/hooks/useUserSession';
+import Restaurant from '.';
 
 const Plat = () => {
     const { restaurant: restaurantId, plat: platId } = useLocalSearchParams();
+    const [restaurant, setRestaurant] = useState<null | { name: string, stars: number, number_of_notes: number, img: string, frais_livraisons: string, distance: string, address: string }>();
     const [plat, setPlat] = useState<{ key: string, name: string, prix: number, url: string, ingredients: string[] } | null>(null);
     const [loading, setLoading] = useState(true);
     const [showAddToCartButton, setShowAddToCartButton] = useState(true);
     const [cart, setCart] = useState<{ key?: string, name?: string, prix?: number, url?: string, ingredients?: string[] }[]>([]);
+    const { userId } = useUserSession();
+
+    useEffect(() => {
+        const unsubscribe = firebase.firestore()
+            .collection('Restaurant')
+            .doc(restaurantId as string)
+            .onSnapshot(querysnapshot => {
+                console.log(querysnapshot.data())
+                setRestaurant(querysnapshot.data());
+            });
+        return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
         const unsubscribe = firebase.firestore()
@@ -28,15 +43,72 @@ const Plat = () => {
         return () => unsubscribe();
     }, [platId]);
 
-    const handleAddToCart = () => {
-        if (plat) {
+    useEffect(() => {
+        if (userId) {
+            const cartRef = firebase.firestore().collection('Panier').doc(userId);
+    
+            const unsubscribe = cartRef.onSnapshot(querySnapshot => {
+                const data = querySnapshot.data();
+                if (data && data.plats) {
+                    setCart(data.plats);
+                } else {
+                    setCart([]);
+                }
+            });
+    
+            return () => unsubscribe();
+        }
+    }, [userId]);
+
+    // const handleAddToCart = () => {
+    //     if (!userId) return
+    //     if (plat) {
+    //         setCart([...cart, plat]);
+    //         setShowAddToCartButton(false);
+
+    //         firebase.firestore()
+    //         .collection(`Panier`)
+    //         .doc(userId)
+    //         .set({
+    //             userId,
+    //             restaurantId,
+    //             plats: [plat],
+    //         })
+    //     }
+    // };
+
+    const handleAddToCart = async () => {
+        if (plat && userId) {
             setCart([...cart, plat]);
             setShowAddToCartButton(false);
+
+            const panierRef = firebase.firestore().collection('Panier').doc(userId);
+
+            try {
+                await panierRef.set({
+                    userId,
+                    restaurantId,
+                    restaurantName: restaurant?.name || '',
+                }, { merge: true });
+
+                await panierRef.update({
+                    plats: firebase.firestore.FieldValue.arrayUnion({
+                        platId,
+                        platName: plat.name,
+                        prix: plat.prix,
+                        url: plat.url,
+                        ingredients: plat.ingredients,
+                    })
+                });
+
+            } catch (error) {
+                console.error("Erreur de mise à jour du panier : ", error);
+            }
         }
     };
 
     const handleViewCart = () => {
-        router.push('/pannier');
+        router.push('/panier');
     };
 
     if (loading) {
@@ -58,16 +130,7 @@ const Plat = () => {
     return (
         <SafeAreaView>
             <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
-            <ImageContainer imageUrl = {plat.url} />
-                {/* <View style={styles.platImage}>
-                    {plat.url && (
-                        <Image
-                            style={styles.imagePlat}
-                            source={plat.url}
-                            contentFit="cover"
-                        />
-                    )}
-                </View> */}
+                <ImageContainer imageUrl={plat.url} />
                 <NavBar />
 
                 <View>
@@ -79,16 +142,22 @@ const Plat = () => {
                         )}
                     </View>
                 </View>
-            </ScrollView>
             {showAddToCartButton ? (
-                <TouchableOpacity style={styles.orderButton} onPress={handleAddToCart}>
-                    <Text style={styles.orderButtonText}>Ajouter au panier • {plat.prix ? (plat.prix / 100).toFixed(2) : ''}€</Text>
+                <TouchableOpacity
+                    style={[styles.orderButton, !userId && styles.disabledButton]}
+                    onPress={handleAddToCart}
+                    disabled={!userId}
+                >
+                    <Text style={styles.orderButtonText}>
+                        {userId ? `Ajouter au panier • ${plat.prix ? (plat.prix / 100).toFixed(2) : ''}€` : 'Vous devez être connecté'}
+                    </Text>
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity style={styles.orderButton} onPress={handleViewCart}>
                     <Text style={styles.orderButtonText}>Voir le panier ({cart.length} {cart.length === 1 ? 'article' : 'articles'})</Text>
                 </TouchableOpacity>
             )}
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -110,15 +179,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    // platImage: {
-    //     height: 200,
-    //     backgroundColor: 'gold',
-    //     position: 'relative',
-    // },
-    // imagePlat: {
-    //     flex: 1,
-    //     width: '100%',
-    // },
     littleTitle: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -143,6 +203,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    disabledButton: {
+        backgroundColor: '#ccc',
     },
 });
 
