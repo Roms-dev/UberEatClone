@@ -42,6 +42,7 @@ const HomeScreen = () => {
       <TouchableOpacity>
         <Icon name="shopping-cart" size={24} color="#000" />
       </TouchableOpacity>
+
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />

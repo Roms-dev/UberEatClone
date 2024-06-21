@@ -22,8 +22,10 @@ const CreateAccount = () => {
       .createUserWithEmailAndPassword(email, password)
       .then((credential) => {
         console.log('User account created & signed in!');
+
         setUserId(credential.user.uid)
         router.push('/');
+
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {

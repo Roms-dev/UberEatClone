@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Image } from 'expo-image';
-
-const NavBar = () => {
-    return (
-        <View style={styles.navBar}>
-            <View>
-                <Icon style={styles.iconContainer} name="arrow-back" size={30} color='white' onPress={() => { router.back() }} />
-            </View>
-        </View>
-    );
-};
+// import { Image } from 'expo-image';
+import NavBar from '@/components/NavBar';
+import ImageContainer from '@/components/ImageContainer';
 
 const Plat = () => {
     const { restaurant: restaurantId, plat: platId } = useLocalSearchParams();
-
     const [plat, setPlat] = useState<{ key: string, name: string, prix: number, url: string, ingredients: string[] } | null>(null);
     const [loading, setLoading] = useState(true);
     const [showAddToCartButton, setShowAddToCartButton] = useState(true);
@@ -46,7 +36,7 @@ const Plat = () => {
     };
 
     const handleViewCart = () => {
-        router.push('/cart'); // Assurez-vous que cette route existe pour afficher le panier
+        router.push('/pannier');
     };
 
     if (loading) {
@@ -66,9 +56,10 @@ const Plat = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView>
             <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
-                <View style={styles.platImage}>
+            <ImageContainer imageUrl = {plat.url} />
+                {/* <View style={styles.platImage}>
                     {plat.url && (
                         <Image
                             style={styles.imagePlat}
@@ -76,7 +67,7 @@ const Plat = () => {
                             contentFit="cover"
                         />
                     )}
-                </View>
+                </View> */}
                 <NavBar />
 
                 <View>
@@ -119,25 +110,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    navBar: {
-        width: '100%',
-        height: 100,
-        backgroundColor: 'transparent',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'flex-start',
-        position: 'absolute',
-        padding: 25,
-    },
-    platImage: {
-        height: 200,
-        backgroundColor: 'gold',
-        position: 'relative',
-    },
-    imagePlat: {
-        flex: 1,
-        width: '100%',
-    },
+    // platImage: {
+    //     height: 200,
+    //     backgroundColor: 'gold',
+    //     position: 'relative',
+    // },
+    // imagePlat: {
+    //     flex: 1,
+    //     width: '100%',
+    // },
     littleTitle: {
         fontSize: 24,
         fontWeight: 'bold',
