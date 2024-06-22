@@ -2,6 +2,7 @@ import { Image } from 'expo-image';
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
+import NavBar from '@/components/NavBar';
 
 
 const LoginScreen = () => {
