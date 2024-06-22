@@ -10,6 +10,7 @@ export default function RootLayout() {
         <Stack.Screen name="login"  />
         <Stack.Screen name="register" />
         <Stack.Screen name="pannier" options={{headerShown:false}} />
+        <Stack.Screen name="account_settings" options={{ headerShown: false }} />
       </Stack>
   </UserSessionProvider>
     
