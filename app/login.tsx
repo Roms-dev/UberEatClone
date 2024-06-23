@@ -14,6 +14,11 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      return;
+    }
+
     auth()
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
