@@ -15,34 +15,6 @@ const PlatContainer = () => {
 
     const { restaurant: restaurantId } = useLocalSearchParams();
     const [plats, setPlats] = useState<{ key: string, name: string, prix: number, url: string, ingredients: string[] }[]>([]);
-    // const [loading, setLoading] = useState(true);
-
-    // useEffect(() => {
-    //     const unsubscribe = firebase.firestore()
-    //         .collection('Restaurant')
-    //         .doc(restaurantId as string)
-    //         .collection('Plats')
-    //         .onSnapshot(querysnapshot => {
-    //             const plats: any[] = [];
-    //             querysnapshot.forEach((documentSnapshot) => {
-    //                 plats.push({
-    //                     ...documentSnapshot.data(),
-    //                     key: documentSnapshot.id,
-    //                 });
-    //             });
-    //             setPlats(plats);
-    //             setLoading(false);
-    //         });
-    //     return () => unsubscribe();
-    // }, [restaurantId]);
-
-    // if (loading) {
-    //     return (
-    //         <SafeAreaView style={styles.loaderContainer}>
-    //             <ActivityIndicator size="large" color="green" />
-    //         </SafeAreaView>
-    //     );
-    // }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
