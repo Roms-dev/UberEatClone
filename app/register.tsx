@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { Link, router } from 'expo-router';
 import { Image } from 'expo-image';
@@ -41,51 +41,56 @@ const CreateAccount = () => {
   };
 
   return (
-    <View style={styles.container}>
-        <Image
-                style={styles.image}
-                source={{uri: 'https://tse3.mm.bing.net/th?id=OIP.wd2TqQZ0tAIUOyCWjcWZkgAAAA&pid=Api&P=0&h=180'}}
-                contentFit="contain"
-        />
-      <Text style={styles.title}>Create Account</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={text => setFirstName(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={text => setLastName(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={text => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Address"
-        value={address}
-        onChangeText={text => setAddress(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      <Link href="/login">
-            <Text style={styles.signinText}>Déjà un compte? Connectez-vous</Text>
-      </Link>
-    </View>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
+        <NavBar />
+        <View style={styles.container}>
+            <Image
+                    style={styles.image}
+                    source={{uri: 'https://tse3.mm.bing.net/th?id=OIP.wd2TqQZ0tAIUOyCWjcWZkgAAAA&pid=Api&P=0&h=180'}}
+                    contentFit="contain"
+            />
+          <Text style={styles.title}>Create Account</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={text => setFirstName(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            value={lastName}
+            onChangeText={text => setLastName(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Address"
+            value={address}
+            onChangeText={text => setAddress(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+          <Link href="/login">
+                <Text style={styles.signinText}>Déjà un compte? Connectez-vous</Text>
+          </Link>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

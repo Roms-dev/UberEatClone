@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import NavBar from '@/components/NavBar';
 
 
@@ -40,33 +38,38 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{ uri: 'https://tse3.mm.bing.net/th?id=OIP.wd2TqQZ0tAIUOyCWjcWZkgAAAA&pid=Api&P=0&h=180' }}
-        contentFit="contain"
-      />
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <Link href="/register">
-        <Text style={styles.signupText}>Vous n'avez pas de comptes? Inscrivez-vous</Text>
-      </Link>
-    </View>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
+      <NavBar />
+        <View style={styles.container}>
+          <Image
+            style={styles.image}
+            source={{ uri: 'https://tse3.mm.bing.net/th?id=OIP.wd2TqQZ0tAIUOyCWjcWZkgAAAA&pid=Api&P=0&h=180' }}
+            contentFit="contain"
+          />
+          <Text style={styles.title}>Login</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <Link href="/register">
+            <Text style={styles.signupText}>Vous n'avez pas de comptes? Inscrivez-vous</Text>
+          </Link>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
