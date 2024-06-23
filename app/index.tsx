@@ -5,7 +5,7 @@ import { Link, useRouter } from 'expo-router';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
-import * as Location from "expo-location"
+// import * as Location from "expo-location"
 
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -13,21 +13,20 @@ const HomeScreen = () => {
   const [address, setAddress] = useState('');
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [location, setLocation] = useState<any>(null)
 
-  useEffect(() => {
-  ;(async () => { 
-    const { status } = await Location.requestBackgroundPermissionsAsync()
+//   useEffect(() => {
+//   ;(async () => { 
+//     const { status } = await Location.requestBackgroundPermissionsAsync()
 
-    if (status != 'granted') {
-        setErrorMessage("ermission granted")
-        return
-    }
+//     if (status != 'granted') {
+//         setErrorMessage("ermission granted")
+//         return
+//     }
 
-    const location = await Location.getCurrentPositionAsync()
-    setLocation(location)
-  })();
-}, [])
+//     const location = await Location.getCurrentPositionAsync()
+//     setLocation(location)
+//   })();
+// }, [])
 
   const { isAuthenticated } = useUserSession();
   const router = useRouter();
