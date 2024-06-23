@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, Button, TextInput, Alert, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, Alert, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { UserContext } from '@/components/UserSessionProvider';
 import { useRouter } from 'expo-router';
+import NavBar from '@/components/NavBar';
 
 const AccountSettingsScreen = () => {
   const { changePassword, logout } = useContext(UserContext);
@@ -29,20 +30,25 @@ const AccountSettingsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Paramètres</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nouveau Mot de Passe"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
-      <Button title="Changer de Mot de Passe" onPress={handleChangePassword} color="#162328" />
-      <View style={styles.logoutButton}>
-        <Button title="Se Déconnecter" onPress={handleLogout} color="#bf2f38" />
-      </View>
-    </View>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
+        <NavBar />
+        <View style={styles.container}>
+          <Text style={styles.title}>Paramètres</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nouveau Mot de Passe"
+            secureTextEntry
+            value={newPassword}
+            onChangeText={setNewPassword}
+          />
+          <Button title="Changer de Mot de Passe" onPress={handleChangePassword} color="#162328" />
+          <View style={styles.logoutButton}>
+            <Button title="Se Déconnecter" onPress={handleLogout} color="#bf2f38" />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
