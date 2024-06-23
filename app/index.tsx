@@ -6,7 +6,7 @@ import Icon from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
-import * as Location from "expo-location"
+// import * as Location from "expo-location"
 
 
 const HomeScreen = () => {
