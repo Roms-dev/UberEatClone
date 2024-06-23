@@ -39,7 +39,7 @@ const HomeScreen = () => {
           value={address}
           onChangeText={address => setAddress(address)}
         />        
-        <TouchableOpacity onPress={() => router.push('/shopping_cart')}>
+        <TouchableOpacity onPress={() => router.push('/panier')}>
           <Icon name="shopping-cart" size={24} color="#000" />
         </TouchableOpacity>
       </View>
@@ -58,7 +58,10 @@ const HomeScreen = () => {
         )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.restaurantContainer} onPress={() => router.push(`/restaurant/${item.key}`)}>
+          // <TouchableOpacity style={styles.restaurantContainer} onPress={() => router.push(`/restaurant/${item.key}`)}>
+
+            <Link href={`/restaurant/${item.key}`} asChild style={styles.restaurantContainer}>
+
             <Pressable>
               <View style={styles.restaurantWrapper}>
                 <Image
@@ -77,7 +80,8 @@ const HomeScreen = () => {
                 </Text>
               </View>
             </Pressable>
-          </TouchableOpacity>
+            </Link>
+          // </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
