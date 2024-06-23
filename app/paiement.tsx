@@ -10,7 +10,7 @@ const Paiement = () => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScrollView>
-                <View>test</View>
+                <Text>test</Text>
             </ScrollView>
         </SafeAreaView>
     );
