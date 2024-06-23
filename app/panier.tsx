@@ -24,6 +24,16 @@ const Panier = () => {
         return totalPrice;
     };
 
+    const deleteCartItem = async (itemIndex: number) => {
+        const updatedCart = cart.filter((_, index) => index !== itemIndex);
+        setCart(updatedCart);
+
+        await firebase.firestore().collection('Panier').doc(userId).set({
+            plats: updatedCart,
+            restaurantName: cartRestaurant
+        });
+    }; 
+
     useEffect(() => {
         if (userId) {
             const unsubscribe = firebase.firestore()
@@ -78,6 +88,12 @@ const Panier = () => {
                                     <Text style={styles.itemPrice}>{(item.prix / 100).toFixed(2)}€</Text>
                                     <Text style={styles.itemPrice}>Quantité : 1</Text>
                                 </View>
+                                <TouchableOpacity
+                                    style={styles.deleteButton}
+                                    onPress={() => deleteCartItem(index)}
+                                >
+                                    <Text style={styles.deleteButtonText}>x</Text>
+                                </TouchableOpacity>
                             </View>
                         ))
                     ) : (
@@ -154,7 +170,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    deleteButton: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontSize: 14,
+    },
 });
-
 
 export default Panier;

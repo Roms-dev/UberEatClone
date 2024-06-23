@@ -6,15 +6,38 @@ import { router, Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 // import PlatContainer from '@/components/PlatContainer';
 import ImageContainer from '@/components/ImageContainer';
+// import SoundPlayer from 'react-native-sound';
 
 
 const FullNavBar = () => {
     const [heartColor, setHeartColor] = useState('white');
     const [pointsColor, setPointsColor] = useState('white');
 
+    // useEffect(() => {
+    //     SoundPlayer.setCategory('Ambient', true);
+    // }, []);
+
     const toggleHeartColor = () => {
         setHeartColor(prevColor => (prevColor === 'white' ? 'green' : 'white'));
+        // playHeartSound();
     };
+
+    // const playHeartSound = () => {
+    //     const soundPath = 'like.mp3';
+    //     const sound = new SoundPlayer(soundPath, SoundPlayer.MAIN_BUNDLE, (error) => {
+    //         if (error) {
+    //             console.log('Failed to load the sound', error);
+    //             return;
+    //         }
+    //         sound.play((success) => {
+    //             if (success) {
+    //                 console.log('Sound played successfully');
+    //             } else {
+    //                 console.log('Failed to play the sound');
+    //             }
+    //         });
+    //     });
+    // };
 
     const togglePointsColor = () => {
         setPointsColor(prevColor => (prevColor === 'white' ? 'black' : 'white'));

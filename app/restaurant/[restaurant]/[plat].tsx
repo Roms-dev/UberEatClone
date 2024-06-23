@@ -6,7 +6,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import NavBar from '@/components/NavBar';
 import ImageContainer from '@/components/ImageContainer';
 import useUserSession from '@/hooks/useUserSession';
-import Restaurant from '.';
 
 const Plat = () => {
     const { restaurant: restaurantId, plat: platId } = useLocalSearchParams();
