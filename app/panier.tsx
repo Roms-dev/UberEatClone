@@ -12,7 +12,7 @@ const Panier = () => {
     const [cartRestaurant, setCartRestaurant] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const handleViewCart = () => {
+    const paiement = () => {
         router.push('/paiement');
     };
 
@@ -84,7 +84,7 @@ const Panier = () => {
                         <Text style={styles.emptyCartText}>Votre panier est vide.</Text>
                     )}
                     <Text style={styles.itemName}>Prix total : {(calculateTotalPrice() / 100).toFixed(2)}€</Text>
-                    <TouchableOpacity style={styles.orderButton} onPress={handleViewCart}>
+                    <TouchableOpacity style={styles.orderButton} onPress={paiement}>
                     <Text style={styles.orderButtonText}>Valider la commande</Text>
                     </TouchableOpacity>
                 </View>
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
     },
     emptyCartText: {
         textAlign: 'center',
-        marginTop: 20,
         fontSize: 16,
     },
     loaderContainer: {
