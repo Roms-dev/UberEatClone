@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Image } from 'expo-image';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import NavBar from '@/components/NavBar';
+
+
 import { Link, router } from 'expo-router';
 import auth from '@react-native-firebase/auth';
 

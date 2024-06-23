@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import { Link, router } from 'expo-router';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
+import NavBar from '@/components/NavBar';
 
 const CreateAccount = () => {
   const [firstName, setFirstName] = useState('');
