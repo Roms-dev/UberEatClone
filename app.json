@@ -7,6 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -18,9 +19,12 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "permissions": ["android.permission.ACCESS_BACKGROUND_LOCATION"]
+        "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ],
+     
       "compileSdkVersion": 31,
       "targetSdkVersion": 31,
       "kotlinVersion": "1.7.10",

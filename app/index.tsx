@@ -14,21 +14,20 @@ const HomeScreen = () => {
   const [search, setSearch] = useState('');
   const [address, setAddress] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [location, setLocation] = useState<any>(null)
 
-  useEffect(() => {
-  ;(async () => { 
-    const { status } = await Location.requestBackgroundPermissionsAsync()
+//   useEffect(() => {
+//   ;(async () => { 
+//     const { status } = await Location.requestBackgroundPermissionsAsync()
 
-    if (status != 'granted') {
-        setErrorMessage("ermission granted")
-        return
-    }
+//     if (status != 'granted') {
+//         setErrorMessage("ermission granted")
+//         return
+//     }
 
-    const location = await Location.getCurrentPositionAsync()
-    setLocation(location)
-  })();
-}, [])
+//     const location = await Location.getCurrentPositionAsync()
+//     setLocation(location)
+//   })();
+// }, [])
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
