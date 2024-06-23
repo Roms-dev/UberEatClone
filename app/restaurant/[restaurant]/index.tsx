@@ -180,7 +180,6 @@ const Restaurant = () => {
                         <Text style={styles.subTitle}>Nos plats à emporter</Text>
                     </View>
 
-                    {/* <PlatContainer /> */}
                     {plats.map((item) => (
                         <Link href={`/restaurant/${restaurantId}/${item.key}`} asChild style={styles.foodContainer}>
                             <Pressable>
@@ -212,38 +211,6 @@ const Restaurant = () => {
                             </Pressable>
                         </Link>
                     ))}
-
-
-                    {/* <FlatList
-                data={plats}
-                keyExtractor={(item) => item.key}
-                renderItem={({ item }) => (
-                    <View style={styles.foodContainer}>
-                        <View style={styles.row}>
-
-                            <View style={styles.column1}>
-
-                                <Text style={styles.littleTitle}>{item.name}</Text>
-
-                                <Text style={styles.price}>{item.prix / 100}€</Text>
-
-                                <Text>ingrédients</Text>
-
-                            </View>
-
-                            <View style={styles.column2}>
-                                <Image
-                                style={styles.image}
-                                source={item.url}
-                                contentFit="cover"
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    )}
-                /> */}
-
-
                 </View>
             </ScrollView>
 
@@ -333,11 +300,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 16,
     },
-    // restaurantImage: {
-    //     height: 150,
-    //     backgroundColor: 'gold',
-    //     position: 'relative',
-    // },
     buttonRow: {
         flexDirection: 'row',
     },
@@ -405,22 +367,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#0553',
         borderRadius: 10,
     },
-    // imageRestaurant: {
-    //     flex: 1,
-    //     width: '100%',
-    // },
-    // modalContainer: {
-    //     flex: 1,
-    //     justifyContent: 'flex-end',
-    //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    // },
-    // modalContent: {
-    //     backgroundColor: 'white',
-    //     padding: 20,
-    //     borderTopLeftRadius: 20,
-    //     borderTopRightRadius: 20,
-    //     minHeight: '50%',
-    // },
 });
 
 export default Restaurant 
