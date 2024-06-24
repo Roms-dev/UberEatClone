@@ -5,32 +5,53 @@ import { Link, useRouter } from 'expo-router';
 import Icon from '@expo/vector-icons/FontAwesome';
 import { Image } from 'expo-image';
 import useUserSession from '@/hooks/useUserSession';
-// import * as Location from "expo-location"
+import * as Location from "expo-location";
 
 const HomeScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [address, setAddress] = useState('');
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [location, setLocation] = useState<any>(null);
+  const [locationAddress, setLocationAddress] = useState<string | null>(null);
 
-//   useEffect(() => {
-//   ;(async () => { 
-//     const { status } = await Location.requestBackgroundPermissionsAsync()
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
 
-//     if (status != 'granted') {
-//         setErrorMessage("ermission granted")
-//         return
-//     }
+      if (status !== 'granted') {
+        setErrorMessage("Permission not granted");
+        return;
+      }
 
-//     const location = await Location.getCurrentPositionAsync()
-//     setLocation(location)
-//   })();
-// }, [])
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      // Geocoding with OpenCage API
+      const { latitude, longitude } = location.coords;
+      const apiKey = '6d33fe48ce624bfda7db14c2bde9fa40'; // Replace with your OpenCage API key
+      try {
+        const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${latitude}+${longitude}&pretty=1`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data); // Pour voir ce que vous avez récupéré dans la console
+        if (data.results && data.results.length > 0) {
+          setLocationAddress(data.results[0].formatted);
+        } else {
+          setErrorMessage('No address found');
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        setErrorMessage('Failed to fetch address');
+      }
+      
+    })();
+  }, []);
 
   const { isAuthenticated } = useUserSession();
   const router = useRouter();
-
 
   useEffect(() => {
     const unsubscribe = firebase.firestore()
@@ -47,17 +68,20 @@ const HomeScreen = () => {
       });
 
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        <TextInput
-          style={styles.navBarAddress}
-          placeholder="Saisissez votre adresse"
-          value={address}
-          onChangeText={address => setAddress(address)}
-        />        
+        {location ? (
+          <View style={styles.locationContainer}>
+            {locationAddress && <Text style={styles.locationText}>Adresse: {locationAddress}</Text>}
+          </View>
+        ) : errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : (
+          <Text style={styles.loadingMessage}>Chargement de la localisation...</Text>
+        )}
         <TouchableOpacity onPress={() => router.push('/panier')}>
           <Icon name="shopping-cart" size={24} color="#000" />
         </TouchableOpacity>
@@ -71,16 +95,14 @@ const HomeScreen = () => {
           onChangeText={setSearch}
         />
       </View>
+      
       <FlatList
-        data={restaurants.filter((item) => 
+        data={restaurants.filter((item) =>
           item.name.toLowerCase().includes(search.toLowerCase())
         )}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          // <TouchableOpacity style={styles.restaurantContainer} onPress={() => router.push(`/restaurant/${item.key}`)}>
-
-            <Link href={`/restaurant/${item.key}`} asChild style={styles.restaurantContainer}>
-
+          <Link href={`/restaurant/${item.key}`} asChild style={styles.restaurantContainer}>
             <Pressable>
               <View style={styles.restaurantWrapper}>
                 <Image
@@ -99,8 +121,7 @@ const HomeScreen = () => {
                 </Text>
               </View>
             </Pressable>
-            </Link>
-          // </TouchableOpacity>
+          </Link>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
@@ -153,6 +174,28 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginRight: 10,
+  },
+  locationContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  locationText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  errorMessage: {
+    fontSize: 16,
+    color: 'red',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  loadingMessage: {
+    fontSize: 16,
+    color: '#333',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   restaurantWrapper: {
     flex: 1,
