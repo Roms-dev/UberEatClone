@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, Button, TextInput, Alert, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Alert, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { UserContext } from '@/components/UserSessionProvider';
 import { useRouter } from 'expo-router';
 import NavBar from '@/components/NavBar';
@@ -30,24 +30,30 @@ const AccountSettingsScreen = () => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
-        <NavBar />
-        <View style={styles.container}>
-          <Text style={styles.title}>Paramètres</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nouveau Mot de Passe"
-            secureTextEntry
-            value={newPassword}
-            onChangeText={setNewPassword}
-          />
-          <Button title="Changer de Mot de Passe" onPress={handleChangePassword} color="#162328" />
-          <View style={styles.logoutButton}>
-            <Button title="Se Déconnecter" onPress={handleLogout} color="#bf2f38" />
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavBar />
+      <View style={styles.container}>
+        <Text style={styles.title}>Paramètres</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Nouveau Mot de Passe"
+              secureTextEntry
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+              <Text style={styles.buttonText}>Changer de Mot de Passe</Text>
+            </TouchableOpacity>
           </View>
+        </ScrollView>
+        <View style={styles.logoutButton}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: '#bf2f38' }]} onPress={handleLogout}>
+            <Text style={styles.buttonText}>Se Déconnecter</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -59,11 +65,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 24,
     marginBottom: 20,
     color: '#149234',
     fontWeight: 'bold',
+  },
+  formContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
   input: {
     width: '100%',
@@ -73,8 +87,22 @@ const styles = StyleSheet.create({
     borderColor: '#bbb',
     borderRadius: 5,
   },
+  button: {
+    width: '100%',
+    backgroundColor: '#162328',
+    borderRadius: 10,
+    paddingVertical: 14,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 8,
+  },
   logoutButton: {
-    marginTop: 20,
+    marginVertical: 20,
     width: '100%',
   },
 });
